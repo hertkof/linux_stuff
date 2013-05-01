@@ -1,0 +1,49 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import os, os.path, urllib2
+
+homedir = os.path.expanduser('~')
+ferdir = homedir+'/.ferfer'
+keyfile = ferdir+'/.key'
+
+def register():
+		print 'hey fella! give me your username:'
+		username = raw_input()
+		print 'very good! now remote key(found it at https://friendfeed.com/account/api):'
+		remote = raw_input()
+		key = username+':'+remote
+		os.mkdir(ferdir)
+		open(keyfile, 'w').write(key)
+
+
+def post(p, username, remote):
+		command = 'curl -u "'
+		command += username+':'+remote
+		command += '" -d "body='
+		command += p
+		if 'i' in globals():
+			command += '&image_url='+i
+		if 'a' in globals():
+			command += '&audio_url='+a
+		command += '" http://friendfeed-api.com/v2/entry'
+
+		os.system('clear')
+
+f = os.path.isdir(ferdir)
+
+if not f:
+		register()
+else:
+		os.system('clear')
+		key = open(keyfile, 'r').read().split(':')
+		username = key[0]
+		remote = key[1]
+		feed = raw_input('write: ').replace(' ','+')
+		image = raw_input('     image?[y/n]: ')
+		if image == 'y':
+			i = raw_input('      url: ')
+		audio = raw_input('     audio?[y/n]: ')
+		if audio == 'y':
+			a = raw_input('      url: ')
+		post(feed, username, remote)
